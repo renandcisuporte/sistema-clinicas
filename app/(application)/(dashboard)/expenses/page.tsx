@@ -1,14 +1,14 @@
-import { loadExpenses } from "@/app/_actions/expenses"
-import { InputLabel } from "@/app/_components/common/input"
-import { Pagination } from "@/app/_components/common/pagination"
-import { Button, buttonVariants } from "@/app/_components/ui/button"
+import { loadExpenses } from '@/app/_actions/expenses'
+import { InputLabel } from '@/app/_components/common/input'
+import { Pagination } from '@/app/_components/common/pagination'
+import { Button, buttonVariants } from '@/app/_components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/_components/ui/select"
+} from '@/app/_components/ui/select'
 import {
   Table,
   TableBody,
@@ -16,25 +16,25 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/app/_components/ui/table"
-import { cn, formatPagination } from "@/app/_lib/utils"
-import { SearchParamsProps } from "@/app/_types/common"
-import { Edit, Save, Search, Trash } from "lucide-react"
-import { Metadata } from "next"
-import Link from "next/link"
-import { SwitchExpense } from "./_components/switch-expense"
-import { TypeExpense } from "./_components/type-expense"
-import { ModalDelete, ModalForm } from "./page-client"
+} from '@/app/_components/ui/table'
+import { cn, formatPagination } from '@/app/_lib/utils'
+import { SearchParamsProps } from '@/app/_types/common'
+import { Edit, Save, Search, Trash } from 'lucide-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { SwitchExpense } from './_components/switch-expense'
+import { TypeExpense } from './_components/type-expense'
+import { ModalDelete, ModalForm } from './page-client'
 
 export const metadata: Metadata = {
-  title: "Lista de Despesas - Clinicas",
+  title: 'Lista de Despesas - Clinicas',
 }
 
 export default async function Page({ searchParams }: SearchParamsProps) {
   const {
-    description = "",
-    type = "",
-    active = "",
+    description = '',
+    type = '',
+    active = '',
     limit = 15,
     page = 1,
     modal,
@@ -74,7 +74,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
           placeholder="Pesquisar..."
         />
 
-        <Select name="active" defaultValue={String(active || "all")}>
+        <Select name="active" defaultValue={String(active || 'all')}>
           <SelectTrigger className="w-[220px]">
             <SelectValue placeholder="Ativo/Inativo" />
           </SelectTrigger>
@@ -85,7 +85,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
           </SelectContent>
         </Select>
 
-        <Select name="type" defaultValue={String(type || "all")}>
+        <Select name="type" defaultValue={String(type || 'all')}>
           <SelectTrigger className="w-[220px]">
             <SelectValue placeholder="Renda Fixa/Variável" />
           </SelectTrigger>
@@ -101,8 +101,8 @@ export default async function Page({ searchParams }: SearchParamsProps) {
           Pesquisar
         </Button>
         <Link
-          href={{ query: { modal: "true" } }}
-          className={cn(buttonVariants({ variant: "outline" }))}
+          href={{ query: { modal: 'true' } }}
+          className={cn(buttonVariants({ variant: 'outline' }))}
         >
           <Save className="mr-1 w-4" />
           Cadastrar
@@ -208,7 +208,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
                   href={{
                     query: {
                       id: item.id,
-                      modal: "true",
+                      modal: 'true',
                       page,
                       limit,
                       type,
@@ -216,17 +216,17 @@ export default async function Page({ searchParams }: SearchParamsProps) {
                       description,
                     },
                   }}
-                  className={buttonVariants({ variant: "outline", size: "sm" })}
+                  className={buttonVariants({ variant: 'outline', size: 'sm' })}
                 >
                   <Edit className="mr-1 w-4" />
                   Editar
                 </Link>
 
                 <Link
-                  href={{ query: { id: item.id, modal: "delete" } }}
+                  href={{ query: { id: item.id, modal: 'delete' } }}
                   className={buttonVariants({
-                    variant: "destructive",
-                    size: "sm",
+                    variant: 'destructive',
+                    size: 'sm',
                   })}
                 >
                   <Trash className="mr-1 w-4" />
@@ -312,12 +312,12 @@ export default async function Page({ searchParams }: SearchParamsProps) {
       </Pagination.root>
 
       <ModalForm
-        open={modal === "true"}
+        open={modal === 'true'}
         data={data?.find((item) => item.id === id)}
       />
 
       <ModalDelete
-        open={modal === "delete"}
+        open={modal === 'delete'}
         data={data?.find((item) => item.id === id)}
       />
     </div>
