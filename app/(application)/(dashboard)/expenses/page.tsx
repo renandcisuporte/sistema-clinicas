@@ -33,8 +33,8 @@ export const metadata: Metadata = {
 export default async function Page({ searchParams }: SearchParamsProps) {
   const {
     description = "",
-    type,
-    active,
+    type = "",
+    active = "",
     limit = 15,
     page = 1,
     modal,
@@ -205,7 +205,17 @@ export default async function Page({ searchParams }: SearchParamsProps) {
               </TableCell>
               <TableCell className="w-[1%] space-x-1 whitespace-nowrap text-center">
                 <Link
-                  href={{ query: { id: item.id, modal: "true" } }}
+                  href={{
+                    query: {
+                      id: item.id,
+                      modal: "true",
+                      page,
+                      limit,
+                      type,
+                      active,
+                      description,
+                    },
+                  }}
                   className={buttonVariants({ variant: "outline", size: "sm" })}
                 >
                   <Edit className="mr-1 w-4" />
