@@ -1,0 +1,57 @@
+services:
+  # dev:
+  #   image: esteticapi:latest
+  #   ports:
+  #     - ${PORT:-3333}:${PORT:-3333}
+  #   command: sh -c "./start.sh"
+  #   volumes:
+  #     - ./:/app
+  #     - /app/node_modules
+  #   networks:
+  #     - shared
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8004:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=host.docker.internal
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+      - PMA_PORT=3306
+      - TZ=America/Sao_Paulo
+    depends_on:
+      - db
+    networks:
+      - shared
+
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    volumes:
+      - ./.db/:/var/lib/mysql
+    networks:
+      - shared
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_DATABASE: clinics_db
+      MYSQL_ROOT_PASSWORD: root
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8005:8025
+
+networks:
+  shared:
+    driver: bridge
+    name: network-clinics
+
+volumes:
+  volume:
+    driver: local
+    name: volumes-clinics

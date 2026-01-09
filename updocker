@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+echo "docker compose down"
+docker rm -f $(docker ps -qa)
+sleep 1
+
+echo "docker compose up -d"
+docker compose up -d
+
+echo "docker compose ps"
+docker compose ps

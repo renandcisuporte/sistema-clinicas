@@ -1,0 +1,267 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+enum Bool {
+  true
+  false
+}
+
+enum Admin {
+  user
+  admin
+  root
+}
+
+enum PeopleType {
+  specialist
+  user
+}
+
+model User {
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  id         String    @id @default(uuid())
+  fullName   String    @db.VarChar(55)
+  email      String    @unique @db.VarChar(45)
+  admin      Admin     @default(user)
+  password   String    @db.VarChar(105)
+  coverImage String?   @db.VarChar(255)
+
+  roules    Roules[]
+  userAdmin UserAdmin[]
+}
+
+model UserAdmin {
+  id       String  @id @default(uuid())
+  userId   String? @db.Char(36)
+  clinicId String? @db.Char(36)
+  user     User?   @relation(fields: [userId], references: [id])
+  clinic   Clinic? @relation(fields: [clinicId], references: [id])
+}
+
+model Roules {
+  id         String  @id @default(uuid())
+  userId     String? @db.Char(36)
+  module     String  @db.VarChar(30)
+  permission String  @db.VarChar(10)
+  user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId])
+}
+
+model Clinic {
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  id             String    @id @default(uuid())
+  clinicId       String?   @unique @db.VarChar(11)
+  title          String    @db.VarChar(55)
+  fantasy        String    @db.VarChar(55)
+  cnpj           String    @db.VarChar(18)
+  ie             String?   @db.VarChar(15)
+  phone          String?   @db.VarChar(15)
+  mobilePhone    String?   @db.VarChar(15)
+  averageService String?   @db.VarChar(5)
+  address        String?   @db.VarChar(50)
+  number         String?   @db.VarChar(5)
+  neighborhood   String?   @db.VarChar(40)
+  complement     String?   @db.VarChar(50)
+  reference      String?   @db.VarChar(65)
+  city           String?   @db.VarChar(30)
+  state          String?   @db.VarChar(2)
+  zipCode        String?   @db.VarChar(9)
+
+  rooms              Room[]
+  workTimes          WorkTime[]
+  workTimesRecommend WorkTimeRecommend[]
+  workTimesService   WorkTimeService[]
+  setting            Setting[]
+  userAdmin          UserAdmin[]
+  expenses           Expense[]
+  realeses           Realese[]
+  products           Product[]
+}
+
+model People {
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deletedAt    DateTime?
+  id           String     @id @default(uuid())
+  clinicId     String?    @db.VarChar(36)
+  fullName     String     @db.VarChar(55)
+  document     String?    @db.VarChar(14)
+  dateOfBirth  DateTime?  @db.Date()
+  phones       String?    @db.Text()
+  email        String?    @db.VarChar(45)
+  type         PeopleType @default(specialist)
+  address      String?    @db.VarChar(50)
+  number       String?    @db.VarChar(5)
+  neighborhood String?    @db.VarChar(40)
+  complement   String?    @db.VarChar(50)
+  reference    String?    @db.VarChar(65)
+  city         String?    @db.VarChar(30)
+  state        String?    @db.VarChar(2)
+  zipCode      String?    @db.VarChar(9)
+}
+
+// colors|times|recommendation
+model Setting {
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  id        String    @id @default(uuid())
+  clinicId  String?   @db.Char(36)
+  code      String    @db.VarChar(28)
+  payload   Json?
+  checked   Boolean   @default(false)
+  clinic    Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([clinicId])
+}
+
+model WorkTime {
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  id        String    @id @default(uuid())
+  clinicId  String?   @db.Char(36)
+  week      String    @db.VarChar(12)
+  times     String?   @db.Text
+  open      Boolean   @default(true)
+  clinic    Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([clinicId])
+}
+
+model WorkTimeRecommend {
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  id        String    @id @default(uuid())
+  clinicId  String?   @db.Char(36)
+  week      String    @db.VarChar(12)
+  times     String?   @db.Text
+  open      Boolean   @default(true)
+  clinic    Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([clinicId])
+}
+
+model WorkTimeService {
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  id        String    @id @default(uuid())
+  clinicId  String?   @db.Char(36)
+  week      String    @db.VarChar(12)
+  times     String?   @db.Text
+  open      Boolean   @default(true)
+  clinic    Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([clinicId])
+}
+
+model Room {
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  id             String    @id @default(uuid())
+  clinicId       String?   @db.Char(36)
+  code           String?   @db.VarChar(20)
+  room           String    @db.VarChar(55)
+  description    String?   @db.Text()
+  averageService String?   @db.VarChar(5)
+  active         Boolean   @default(true)
+  clinic         Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([clinicId])
+}
+
+// expense = desspesa
+enum ExpenseType {
+  fixed
+  variable
+}
+
+model Expense {
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+  id          String      @id @default(uuid())
+  clinicId    String?     @db.Char(36)
+  description String?     @db.VarChar(105)
+  type        ExpenseType @default(fixed)
+  active      Boolean     @default(true)
+  clinic      Clinic?     @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  realese     Realese[]
+
+  @@index([clinicId])
+}
+
+model Realese {
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  id        String    @id @default(uuid())
+  clinicId  String?   @db.Char(36)
+  expenseId String?   @db.Char(36)
+  price     Decimal   @default(0) @db.Decimal(precision: 10, scale: 2)
+  date      DateTime  @db.Date()
+  clinic    Clinic?   @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  expense   Expense?  @relation(fields: [expenseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([clinicId])
+  @@index([expenseId])
+}
+
+model Product {
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  deletedAt        DateTime?
+  id               String             @id @default(uuid())
+  clinicId         String?            @db.Char(36)
+  name             String             @db.VarChar(105)
+  quantity         String             @db.VarChar(26)
+  price            Decimal            @default(0) @db.Decimal(precision: 10, scale: 2)
+  serviceInProduct ServiceInProduct[]
+  clinic           Clinic?            @relation(fields: [clinicId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Service {
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  deletedAt        DateTime?
+  id               String             @id @default(uuid())
+  clinicId         String?            @db.Char(36)
+  name             String             @db.VarChar(105)
+  serviceInProduct ServiceInProduct[]
+}
+
+model ServiceInProduct {
+  id        String  @id @default(uuid())
+  clinicId  String? @db.Char(36)
+  productId String? @db.Char(36)
+  serviceId String? @db.Char(36)
+
+  product     Product? @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  service     Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  rental      Int      @default(0)
+  rentalPrice Decimal  @default(0.00) @db.Decimal(precision: 10, scale: 2)
+
+  // @@unique([clinicId, productId, serviceId])
+}

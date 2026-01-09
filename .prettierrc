@@ -1,0 +1,7 @@
+{
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "arrowParens": "always",
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 80
+}
