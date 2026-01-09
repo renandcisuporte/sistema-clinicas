@@ -51,7 +51,7 @@ export const prismaPeopleRepository: PeopleRepository = {
     if (!response) return null
 
     const { deletedAt, ...rest } = response
-    rest.phones = JSON.parse(`${rest.phones}`)
+    // rest.phones = JSON.parse(`${rest.phones}`)
     return rest
   },
 
@@ -108,7 +108,7 @@ export const prismaPeopleRepository: PeopleRepository = {
     })
 
     return result.map(({ deletedAt, ...rest }) => {
-      rest.phones = JSON.parse(`${rest.phones}`)
+      // rest.phones = JSON.parse(`${rest.phones}`)
       return rest
     })
   },

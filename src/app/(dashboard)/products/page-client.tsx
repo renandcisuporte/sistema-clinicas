@@ -20,10 +20,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CircleX } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useTransition } from 'react'
-import {
-  // @ts-ignore
-  experimental_useFormState as useFormState,
-} from 'react-dom'
 import { useForm } from 'react-hook-form'
 
 export interface ModalFormInterface {
@@ -144,13 +140,37 @@ export function ModalDelete({ open, data }: ModalFormInterface) {
   const { back } = useRouter()
   const { toast } = useToast()
 
-  const [state, formAction] = useFormState(removeProduct, {})
+  async function onSubmit(form: { id: string }) {
+    try {
+      const response = await removeProduct(form.id)
+      toast({
+        title: 'Sucesso!',
+        description: (response as any)?.message,
+      })
+      back()
+    } catch (error) {
+      console.log('[MODALDELETEPRODUCT] Error: ', error)
+
+      toast({
+        title: 'Erro ao remover dados!',
+        description: (error as any)?.message,
+      })
+    }
+  }
+
+  const form = useForm<{ id: string }>({
+    resolver: zodResolver(productSchema.pick({ id: true })),
+  })
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+    reset,
+    register,
+  } = form
 
   useEffect(() => {
-    if (state?.errorMessage !== 'OK') return
-    toast({ title: 'Atenção!', description: 'Excluido com sucesso!' })
-    back()
-  }, [state, back, toast])
+    if (data) reset({ id: data?.id })
+  }, [data, reset])
 
   return (
     <Dialog open={open} onOpenChange={() => back()} modal={true}>
@@ -162,16 +182,16 @@ export function ModalDelete({ open, data }: ModalFormInterface) {
           </DialogDescription>
         </DialogHeader>
         <form
-          action={formAction}
+          onSubmit={handleSubmit(onSubmit)}
           className="float-right flex flex-col flex-wrap justify-end space-y-4 md:flex-row md:space-x-2"
         >
-          <input type="hidden" name="id" value={data?.id} readOnly />
+          <input type="hidden" {...register('id')} />
           <DialogClose asChild>
             <Button variant="ghost" type="button">
               Cancelar
             </Button>
           </DialogClose>
-          <ButtonSubmit remove />
+          <ButtonSubmit remove submitting={isSubmitting} />
         </form>
       </DialogContent>
     </Dialog>

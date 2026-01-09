@@ -1,3 +1,4 @@
+import { maskPrice } from '@/libs/mask'
 import { jsPDF } from 'jspdf'
 import autoTable, { RowInput } from 'jspdf-autotable'
 import { PdfProductProps } from '../../dtos/product'
@@ -19,7 +20,7 @@ const generateProduct = (items: PdfProductProps[]) => {
         styles: { halign: 'center', cellWidth: 25, valign: 'middle' },
       },
       {
-        content: `R$: ${parseFloat(price).toFixed(2).replace('.', ',')}`,
+        content: `R$: ${maskPrice(price)}`,
         styles: { halign: 'center', valign: 'middle' },
       },
     ])

@@ -3,7 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
-    // optimizePackageImports: ['@radix-ui/*'],
     serverActions: true,
   },
   webpack(config) {

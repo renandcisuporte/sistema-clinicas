@@ -32,14 +32,14 @@ export default async function Page({ searchParams }: SearchParamsProps) {
     page,
   })
 
-  const find = id
+  const people = id
     ? (() => {
         const item = data?.find((item) => item.id === id)
         if (!item) return undefined
 
         return {
           ...item,
-          phones: item.phones ? JSON.parse(item.phones) : null,
+          phones: JSON.parse(item.phones!),
           dateOfBirth: item.dateOfBirth ? item.dateOfBirth.toISOString() : null,
         }
       })()
@@ -200,9 +200,9 @@ export default async function Page({ searchParams }: SearchParamsProps) {
         />
       </Pagination.root>
 
-      {modal === 'true' && <ModalForm open={true} data={find} />}
+      {modal === 'true' && <ModalForm open={true} data={people} />}
 
-      {modal === 'delete' && <ModalDelete open={true} data={find} />}
+      {modal === 'delete' && <ModalDelete open={true} data={people} />}
     </div>
   )
 }

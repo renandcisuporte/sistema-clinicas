@@ -5,6 +5,7 @@ import { Product } from '@/types/products'
 import { revalidatePath } from 'next/cache'
 import { prismaProductRepository } from '~/modules/products/repositories/prisma/repository/product-repository'
 import { createProductUseCase } from '~/modules/products/use-cases/create-product-use-case'
+import { deleteProductUseCase } from '~/modules/products/use-cases/delete-product-use-case'
 import { findAllProductUseCase } from '~/modules/products/use-cases/find-all-product-use-case'
 import { updateProductUseCase } from '~/modules/products/use-cases/update-product-use-case'
 
@@ -14,7 +15,7 @@ export async function saveProduct(form: Product) {
 
   const payload = {
     name: form.name,
-    price: form.price,
+    price: Number(form.price.replace(',', '.').replace('.', '')),
     quantity: form.quantity,
     clinicId: session.clinicId,
   }
@@ -26,7 +27,10 @@ export async function saveProduct(form: Product) {
       repository,
     })
 
-    await useCase.execute(form.id, payload)
+    await useCase.execute(form.id, {
+      ...payload,
+      id: form.id!,
+    })
 
     revalidatePath('/(dashboard)/products')
     return {
@@ -46,22 +50,20 @@ export async function saveProduct(form: Product) {
   }
 }
 
-export async function removeProduct(
-  _state: any,
-  formData: FormData,
-): Promise<any> {
-  // const session = await getServerSession(authOptions)
-  // const form = Object.fromEntries(formData)
-  // const { id } = form
-  // await apiFecth(`/products/${id}`, {
-  //   method: "DELETE",
-  //   accessToken: session?.accessToken,
-  // })
-  // revalidateTag("products")
-  // return {
-  //   data: null,
-  //   errorMessage: "OK",
-  // }
+export async function removeProduct(id: string) {
+  const session = await getUser()
+  if (!session) throw new Error('Não autorizado!')
+
+  const useCase = deleteProductUseCase({
+    repository: prismaProductRepository,
+  })
+
+  await useCase.execute(id)
+
+  revalidatePath('/(dashboard)/products')
+  return {
+    message: 'Removido com sucesso!',
+  }
 }
 
 export async function loadProduct(args: any) {

@@ -168,7 +168,7 @@ export function ModalDelete({ open, data }: ModalFormInterface) {
     resolver: zodResolver(expenseSchema.pick({ id: true })),
   })
   const {
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
     handleSubmit,
     reset,
     register,

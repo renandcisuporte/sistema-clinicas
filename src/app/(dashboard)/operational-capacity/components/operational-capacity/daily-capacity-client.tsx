@@ -61,7 +61,7 @@ export function DailyCapacityClient({ data }: DailyCapacityClientProps) {
             <strong>capacidade de procedimento</strong>
             <span>
               {
-                data.workHours.find((_, index) => index === week)
+                data?.workHours?.find((_, index) => index === week)
                   ?.dailyProcedure
               }
             </span>
@@ -71,7 +71,7 @@ export function DailyCapacityClient({ data }: DailyCapacityClientProps) {
             <strong>espaço total ocioso</strong>
             <span>
               {
-                data.workHours.find((_, index) => index === week)
+                data?.workHours?.find((_, index) => index === week)
                   ?.dailyIdleProcedure
               }
             </span>

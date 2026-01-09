@@ -47,12 +47,12 @@ export function ChartClient(props: ChartsInterface) {
 
   const total = React.useMemo(
     () => ({
-      workTime: workHours.reduce((acc, curr) => acc + curr.workTime, 0),
-      workTimeRecommend: workHours.reduce(
+      workTime: workHours?.reduce((acc, curr) => acc + curr.workTime, 0),
+      workTimeRecommend: workHours?.reduce(
         (acc, curr) => acc + curr.workTimeRecommend,
         0,
       ),
-      workTimeService: workHours.reduce(
+      workTimeService: workHours?.reduce(
         (acc, curr) => acc + curr.workTimeService,
         0,
       ),
@@ -60,7 +60,7 @@ export function ChartClient(props: ChartsInterface) {
     [workHours],
   )
 
-  const sumHours = total.workTimeRecommend - total.workTime
+  const sumHours = total.workTimeRecommend! - total.workTime!
   const sumHoursPositive = sumHours <= -1 ? sumHours * -1 : sumHours
 
   return (
@@ -93,13 +93,14 @@ export function ChartClient(props: ChartsInterface) {
                       backgroundColor: chartConfig[chart].color,
                     }}
                   />
-                  {total[key as keyof typeof total].toLocaleString()}hs
+                  {total[key as keyof typeof total]!.toLocaleString()}hs
                 </span>
               </span>
             )
           })}
         </div>
       </CardHeader>
+
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[200px] w-full">
           <BarChart

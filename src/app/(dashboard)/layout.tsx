@@ -157,7 +157,7 @@ export default async function RootLayout({ children }: ChildrenProps) {
           </Nav.LinkDropDown>
 
           <Nav.LinkDropDown
-            data-href={['/operational-capacity']}
+            data-href={['/operational-capacity', '/operational-expense']}
             label="Gráficos"
           >
             <Nav.Link href="/operational-capacity">

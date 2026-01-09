@@ -7,27 +7,26 @@ import { createRealeseUseCase } from '~/modules/realeses/use-cases/create-reales
 import { RealeseFormData } from './types'
 
 export async function actionRelease(formData: RealeseFormData) {
-  try {
-    const session = await getUser()
+  const session = await getUser()
 
-    if (!session) throw new Error('Não autorizado')
+  if (!session) throw new Error('Não autorizado')
 
-    const useCaseRealese = createRealeseUseCase({
-      repository: prismaRealeseRepository,
-    })
+  const useCaseRealese = createRealeseUseCase({
+    repository: prismaRealeseRepository,
+  })
 
-    const realeses = { ...formData.realeses }
-    await useCaseRealese.execute({
-      clinicId: session.clinicId,
-      realeses,
-    })
+  const realeses = { ...formData.realeses }
+  await useCaseRealese.execute({
+    clinicId: session.clinicId,
+    realeses,
+  })
 
-    revalidateTag('releases')
-    revalidatePath('/(dashboard)/releases/[expenses]', 'page')
-  } catch (error) {
-    console.log('[AUTH LOGIN] Error: ', error)
-    throw error
-  }
+  revalidateTag('charts')
+  revalidateTag('realese')
+  revalidateTag('expenses')
+  revalidateTag('expenses_realese')
+  revalidatePath('/(dashboard)/operational-expense', 'page')
+  revalidatePath('/(dashboard)/releases/[expenses]', 'page')
 
   return {
     message: 'Dados salvo com sucesso!',

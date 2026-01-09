@@ -27,7 +27,7 @@ export default async function Page({ searchParams }: SearchParamsProps) {
 
   const { data, total } = await loadProduct({ name, limit, page })
 
-  const find = id
+  const product = id
     ? (() => {
         const item = data?.find((item) => item.id === id)
         if (!item) return undefined
@@ -190,9 +190,33 @@ export default async function Page({ searchParams }: SearchParamsProps) {
         />
       </Pagination.root>
 
-      {modal === 'true' && <ModalForm open={true} data={find} />}
+      {modal === 'true' && (
+        <ModalForm
+          open={true}
+          data={{
+            id: product?.id,
+            retail: '0',
+            serviceId: '',
+            name: product?.name!,
+            price: product?.price.toString()!,
+            quantity: product?.quantity!,
+          }}
+        />
+      )}
 
-      {modal === 'delete' && <ModalDelete open={true} data={find} />}
+      {modal === 'delete' && (
+        <ModalDelete
+          open={true}
+          data={{
+            id: product?.id,
+            retail: '0',
+            serviceId: '',
+            name: product?.name!,
+            price: product?.price.toString()!,
+            quantity: product?.quantity!,
+          }}
+        />
+      )}
     </div>
   )
 }

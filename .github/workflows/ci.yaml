@@ -1,0 +1,51 @@
+name: 🚀 DEPLOY SITE DANIELA FIDELLIS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_work:
+    name: Build Project in Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.DANIELA_FIDELLIS_HOST }}
+          username: ${{ secrets.DANIELA_FIDELLIS_USERNAME }}
+          password: ${{ secrets.DANIELA_FIDELLIS_PASSWORD }}
+          server-dir: ./public_html/
+          exclude: |
+            **/Dockerfile*
+            **/docker-*
+            **/.vscode*
+            **/.vscode*/**
+            **/.next*
+            **/.next*/**
+            **/.git*
+            **/.git*/**
+            README.md
+            **/node_modules/**
+
+  script_work:
+    needs: build_work
+    name: Work in Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Work Deploy in Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DANIELA_FIDELLIS_HOST }}
+          username: ${{ secrets.DANIELA_FIDELLIS_USER }}
+          password: ${{ secrets.DANIELA_FIDELLIS_PASS }}
+          port: 22022
+          script: |
+            cd /home/dclinica/public_html
+            chmod +x ./deploy.sh
+            ./deploy.sh

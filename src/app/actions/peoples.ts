@@ -74,7 +74,7 @@ export async function removePeople({ id }: { id: string }) {
 
     revalidatePath('/(dashboard)/peoples')
     return {
-      message: 'Removido cadastrado com sucesso!',
+      message: 'Removido com sucesso!',
     }
   } catch (err) {
     throw err
@@ -95,7 +95,7 @@ export async function activeInativePeople(id: string) {
 
     revalidatePath('/(dashboard)/peoples')
     return {
-      message: 'Removido cadastrado com sucesso!',
+      message: 'Removido com sucesso!',
     }
   } catch (err) {
     throw err

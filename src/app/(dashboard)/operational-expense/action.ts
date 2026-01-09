@@ -3,24 +3,30 @@
 import { getUser } from '@/libs/session'
 import { unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { prismaChartRepository } from '~/modules/chart/repositories/prisma/repository/prisma-chart-repository'
-import { findFirstChartUseCase } from '~/modules/chart/use-cases/find-first-chart-use-case'
-import { prismaClinicRepository } from '~/modules/clinics/repositories/prisma/repository/prisma-clinic-repository'
-import { prismaPeopleRepository } from '~/modules/peoples/repositories/prisma/repository/prisma-people-repository'
-import { prismaRoomRepository } from '~/modules/rooms/repositories/prisma/repository/prisma-room-repository'
+import { prismaRealeseRepository } from '~/modules/realeses/repositories/prisma/repository/prisma-realese-repository'
+import { findAllRealeseUseCase } from '~/modules/realeses/use-cases/find-all-realese-use-case'
 
 export const getCachedChart = unstable_cache(async () => {
   const session = await getUser()
   if (!session) return redirect('/login')
 
-  const useCase = findFirstChartUseCase({
-    repoChart: prismaChartRepository,
-    repoPeople: prismaPeopleRepository,
-    repoRoom: prismaRoomRepository,
-    repoClinic: prismaClinicRepository,
+  const useCase = findAllRealeseUseCase({
+    repository: prismaRealeseRepository,
   })
 
-  const { data } = await useCase.execute(session?.clinicId)
+  const [{ data: variable }, { data: fixed }] = await Promise.all([
+    useCase.execute({
+      clinicId: session?.clinicId,
+      type: 'variable',
+    }),
+    useCase.execute({
+      clinicId: session?.clinicId,
+      type: 'fixed',
+    }),
+  ])
 
-  return data
-}, ['charts'])
+  return {
+    fixed,
+    variable,
+  }
+}, ['expenses_realese'])

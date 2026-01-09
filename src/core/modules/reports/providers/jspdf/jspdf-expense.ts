@@ -13,8 +13,26 @@ type GroupedExpenses = Record<string, ExpenseGroup>
 
 const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
-const currency = (value: number = 0) =>
-  `R$ ${value === 0 ? '0,00' : value.toFixed(2).replace('.', ',')}`
+const currency = (value: number = 0) => {
+  // Remove qualquer caractere que não seja número ou ponto decimal
+  const newValue = String(value).replace(/[^\d.]/g, '')
+
+  // Converte para número, garantindo que seja tratado corretamente como decimal
+  const numericValue = parseFloat(newValue)
+
+  // Formata o número para centavos e adiciona o símbolo de moeda R$
+  // Retorna 0,00 caso o valor não seja um número válido
+  if (isNaN(numericValue)) return '0,00'
+
+  // Formata o valor para o formato brasileiro (0.000,00)
+  const formattedValue = numericValue
+    .toFixed(2) // Garante duas casas decimais
+    .replace('.', ',') // Substitui o ponto por vírgula
+    .replace(/\B(?=(\d{3})+(?!\d))/g, '.') // Adiciona os pontos separadores de milhar
+
+  return formattedValue
+}
+// `R$ ${value === 0 ? '0,00' : value.toFixed(2).replace('.', ',')}`
 
 function generateMonts(): RowInput[] {
   return [

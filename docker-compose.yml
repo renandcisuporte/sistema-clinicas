@@ -1,22 +1,19 @@
 services:
-  # dev:
-  #   image: esteticapi:latest
-  #   ports:
-  #     - ${PORT:-3333}:${PORT:-3333}
-  #   command: sh -c "./start.sh"
-  #   volumes:
-  #     - ./:/app
-  #     - /app/node_modules
-  #   networks:
-  #     - shared
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    networks:
+      - traefik-network
+    ports:
+      - 3004:3004
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    ports:
-      - 8004:80
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOST=host.docker.internal
+      - PMA_HOST=db # Use o nome do serviço em vez de host.docker.internal
       - PMA_USER=root
       - PMA_PASSWORD=root
       - PMA_PORT=3306
@@ -24,7 +21,9 @@ services:
     depends_on:
       - db
     networks:
-      - shared
+      - traefik-network
+    ports:
+      - 8004:80
 
   db:
     image: mysql:5.7
@@ -34,7 +33,7 @@ services:
     volumes:
       - ./.db/:/var/lib/mysql
     networks:
-      - shared
+      - traefik-network
     environment:
       TZ: America/Sao_Paulo
       MYSQL_DATABASE: clinics_db
@@ -42,16 +41,12 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    networks:
+      - traefik-network
     ports:
-      - 1025:1025
       - 8005:8025
+      - 1025:1025
 
 networks:
-  shared:
+  traefik-network:
     driver: bridge
-    name: network-clinics
-
-volumes:
-  volume:
-    driver: local
-    name: volumes-clinics

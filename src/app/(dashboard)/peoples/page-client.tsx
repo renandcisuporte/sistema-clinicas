@@ -16,7 +16,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { useToast } from '@/hooks/use-toast'
 import { maskDocument, maskPhone, maskZipCode } from '@/libs/mask'
 import { dateToInput } from '@/libs/utils'
-
 import { People, peopleSchema } from '@/types/peoples'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircleX, Plus, Trash } from 'lucide-react'

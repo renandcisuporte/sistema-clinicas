@@ -13,7 +13,7 @@ export interface ChartsInterface {
     procedure: number
     idleProcedure: number
   }
-  workHours: {
+  workHours?: {
     week: string
     workTime: number
     workTimeRecommend: number
@@ -21,4 +21,14 @@ export interface ChartsInterface {
     dailyProcedure?: number
     dailyIdleProcedure?: number
   }[]
+  expenseFixed?: {
+    [expenseId: string]: {
+      [date: string]: { price: number }
+    }
+  }
+  expenseVariable?: {
+    [expenseId: string]: {
+      [date: string]: { price: number }
+    }
+  }
 }

@@ -41,6 +41,10 @@ export default async function Page({
         ...item,
         serviceId: String(params?.serviceId),
         retail: '0',
+        id: item.id!,
+        name: item.name!,
+        quantity: item.quantity!,
+        price: item.price.toString()!,
       }),
     )
   }
