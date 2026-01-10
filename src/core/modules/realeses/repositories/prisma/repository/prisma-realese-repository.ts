@@ -134,6 +134,8 @@ export const prismaRealeseRepository: RealeseRepository = {
       ...(dateStart || dateEnd ? { date: dateFilter } : {}),
     }
 
+    console.log('prismaRealeseRepository', { where })
+
     const result = await prisma.realese.findMany({
       include: {
         expense: {

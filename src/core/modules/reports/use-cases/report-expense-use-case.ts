@@ -24,10 +24,19 @@ export const reportExpenseUseCase = ({
 }: Dependences) => {
   return {
     async execute(input: Input): Promise<Output> {
-      const { clinicId, ...rest } = input
+      const { clinicId, expenseId, ...rest } = input
 
-      const limit = await repository.count({ clinicId })
-      const response = await repository.all({ limit, clinicId, ...rest })
+      const limit = await repository.count({
+        ...rest,
+        clinicId,
+        expenseId,
+      })
+      const response = await repository.all({
+        ...rest,
+        limit,
+        clinicId,
+        expenseId,
+      })
 
       // const formatDate = (date: string) =>
       //   date.split('-').reverse().join('/')
@@ -35,17 +44,16 @@ export const reportExpenseUseCase = ({
       const formatDate = (date: string) =>
         new Date(date).toLocaleDateString('pt-BR')
 
-      const company = input.expenseId
-        ? response.find((item) => item.expenseId === input.expenseId)
-            ?.description
+      const company = expenseId
+        ? response.find((item) => item.expenseId === expenseId)?.description
         : undefined
 
       const payload: string[] = [
-        ...(input.type ? [`Tipo: ${input.type}`] : []),
-        ...(input.dateStart
-          ? [`Data Inicial: ${formatDate(input.dateStart)}`]
+        ...(rest.type ? [`Tipo: ${rest.type}`] : []),
+        ...(rest.dateStart
+          ? [`Data Inicial: ${formatDate(rest.dateStart)}`]
           : []),
-        ...(input.dateEnd ? [`Data Final: ${formatDate(input.dateEnd)}`] : []),
+        ...(rest.dateEnd ? [`Data Final: ${formatDate(rest.dateEnd)}`] : []),
         ...(company ? [`Empresa: ${company}`] : []),
       ]
 
