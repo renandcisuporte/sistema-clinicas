@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { OutputRealese } from '~/modules/realeses/dtos/output-realese'
+import { dateFnsDateProvider } from '~/modules/realeses/providers/date-fns/date-fns-date-provider'
 import { RealeseInput } from '~/modules/realeses/repositories/prisma/entity/realese'
 import { RealeseRepository } from '~/modules/realeses/repositories/realese-repository'
 import { prisma } from '~/shared/prisma'
@@ -97,19 +98,17 @@ export const prismaRealeseRepository: RealeseRepository = {
   async count(args: Record<string, any>): Promise<number> {
     const { clinicId, expenseId, type, dateStart, dateEnd } = args
 
+    const dateFilter = dateFnsDateProvider.execute({
+      endDate: dateEnd,
+      startDate: dateStart,
+    })
+
     const where: Prisma.RealeseWhereInput = {
       clinicId,
       deletedAt: null,
       ...(type ? { expense: { is: { active: true, type } } } : {}),
       ...(expenseId ? { expenseId } : {}),
-      ...(dateStart || dateEnd
-        ? {
-            date: {
-              ...(dateStart && { gte: new Date(`${dateStart}T00:00:00`) }),
-              ...(dateEnd && { lte: new Date(`${dateEnd}T23:59:59.999`) }),
-            },
-          }
-        : {}),
+      ...(dateStart || dateEnd ? { date: dateFilter } : {}),
     }
 
     return prisma.realese.count({
@@ -122,19 +121,17 @@ export const prismaRealeseRepository: RealeseRepository = {
   async all(args: Record<string, any>): Promise<OutputRealese[]> {
     const { clinicId, expenseId, type, dateStart, dateEnd, orderBy } = args
 
+    const dateFilter = dateFnsDateProvider.execute({
+      endDate: dateEnd,
+      startDate: dateStart,
+    })
+
     const where: Prisma.RealeseWhereInput = {
       deletedAt: null,
       clinicId,
       ...(type ? { expense: { is: { active: true, type } } } : {}),
       ...(expenseId ? { expenseId } : {}),
-      ...(dateStart || dateEnd
-        ? {
-            date: {
-              ...(dateStart && { gte: new Date(`${dateStart}T00:00:00`) }),
-              ...(dateEnd && { lte: new Date(`${dateEnd}T23:59:59.999`) }),
-            },
-          }
-        : {}),
+      ...(dateStart || dateEnd ? { date: dateFilter } : {}),
     }
 
     const result = await prisma.realese.findMany({

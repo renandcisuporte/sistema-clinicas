@@ -1,15 +1,17 @@
 'use server'
 
 import { getUser } from '@/libs/session'
+import { endOfYear, format, startOfYear } from 'date-fns'
 import { redirect } from 'next/navigation'
 import { prismaRealeseRepository } from '~/modules/realeses/repositories/prisma/repository/prisma-realese-repository'
 import { findAllRealeseUseCase } from '~/modules/realeses/use-cases/find-all-realese-use-case'
 
 const now = new Date()
 const year = now.getFullYear()
+const yearReference = new Date(year, 0, 1)
 
-const dateStart = new Date(year, 0, 1, 0, 0, 0) // 01/01 ano atual
-const dateEnd = new Date(year, 11, 31, 23, 59, 59) // 31/12 ano atual
+const dateStart = format(startOfYear(yearReference), 'yyyy-MM-dd')
+const dateEnd = format(endOfYear(yearReference), 'yyyy-MM-dd')
 
 export const getCachedChart = async () => {
   const session = await getUser()
@@ -19,18 +21,16 @@ export const getCachedChart = async () => {
     repository: prismaRealeseRepository,
   })
 
-  const dateFormat = (date: string) => date.split('/').reverse().join('-')
-
   const [{ data: variable }, { data: fixed }] = await Promise.all([
     useCase.execute({
-      dateStart: dateFormat(dateStart.toLocaleDateString()),
-      dateEnd: dateFormat(dateEnd.toLocaleDateString()),
+      dateStart,
+      dateEnd,
       clinicId: session?.clinicId,
       type: 'variable',
     }),
     useCase.execute({
-      dateStart: dateFormat(dateStart.toLocaleDateString()),
-      dateEnd: dateFormat(dateEnd.toLocaleDateString()),
+      dateStart,
+      dateEnd,
       clinicId: session?.clinicId,
       type: 'fixed',
     }),
