@@ -7,7 +7,7 @@ echo '# Stop project'
 pm2 stop ecosystem.config.js
 
 echo "# Installing dependencies"
-npm ci
+npm ci --only=production
 
 echo "# Run prisma migrations"
 npx prisma db push deploy --accept-data-loss --skip-generate
