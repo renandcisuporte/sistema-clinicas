@@ -27,7 +27,7 @@ ENV NODE_ENV=production
 RUN npm install -g pm2
 
 COPY --from=builder /app/package*.json ./
-RUN npm ci --only=production
+RUN npm ci --only=dev
 
 COPY --from=builder /app/.env ./
 COPY --from=builder /app/.next ./.next
