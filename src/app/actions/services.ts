@@ -75,7 +75,6 @@ export async function removeService({ id }: { id: string }): Promise<any> {
 export async function loadServices(args: any) {
   try {
     const session = await getUser()
-
     if (!session) throw new Error('Não authorizado')
 
     const { name = '', limit = 15, page = 1 } = args
@@ -85,7 +84,12 @@ export async function loadServices(args: any) {
       serviceInProduct: prismaServiceInProductRepository,
     })
 
-    const result = useCase.execute({ name, limit, page })
+    const result = useCase.execute({
+      name,
+      limit,
+      page,
+      clinicId: session.clinicId,
+    })
 
     return result
   } catch (err) {

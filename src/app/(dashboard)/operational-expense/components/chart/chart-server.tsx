@@ -6,7 +6,7 @@ export async function Chart() {
 
   return (
     <ChartClient
-      title={''}
+      title={'Gráfico de Despesas'}
       fantasy={''}
       expenseFixed={fixed}
       expenseVariable={variable}

@@ -9,6 +9,8 @@ type Types = {
 type Input = {
   clinicId: string
   type: string
+  dateStart?: string
+  dateEnd?: string
 }
 
 type Output = {
@@ -23,11 +25,11 @@ type Dependencies = {
 export const findAllRealeseUseCase = ({ repository }: Dependencies) => {
   return {
     async execute(args: Input): Promise<Output> {
-      const { clinicId, type } = args
-      const common = { clinicId, type }
+      const { clinicId, type, dateEnd, dateStart } = args
+      const common = { clinicId, type, dateEnd, dateStart }
 
       const [total, data] = await Promise.all([
-        repository.count({ clinicId, type }),
+        repository.count({ clinicId, type, dateEnd, dateStart }),
         repository.all(common),
       ])
 

@@ -6,20 +6,18 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-RUN npx prisma generate
-
 # RUN npx prisma migrate deploy
-
+RUN npx prisma generate
 RUN npm run build
 
 # =========================
 # Runtime
 # =========================
-FROM builder AS production
+FROM node:16-alpine AS production
 
 WORKDIR /app
 
@@ -29,13 +27,16 @@ ENV NODE_ENV=production
 RUN npm install -g pm2
 
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
+RUN npm ci --only=production
+
+COPY --from=builder /app/.env ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/ecosystem.config.js ./
 COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/.env ./
+
+RUN npx prisma generate
 
 EXPOSE 3004
 
