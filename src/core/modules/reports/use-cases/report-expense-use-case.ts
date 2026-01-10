@@ -23,6 +23,9 @@ export const reportExpenseUseCase = ({
   pdfGenerator,
 }: Dependences) => {
   return {
+    formatDate(date: string) {
+      return date.split('-').reverse().join('/')
+    },
     async execute(input: Input): Promise<Output> {
       const { clinicId, expenseId, ...rest } = input
 
@@ -38,12 +41,6 @@ export const reportExpenseUseCase = ({
         expenseId,
       })
 
-      // const formatDate = (date: string) =>
-      //   date.split('-').reverse().join('/')
-
-      const formatDate = (date: string) =>
-        new Date(date).toLocaleDateString('pt-BR')
-
       const company = expenseId
         ? response.find((item) => item.expenseId === expenseId)?.description
         : undefined
@@ -51,9 +48,11 @@ export const reportExpenseUseCase = ({
       const payload: string[] = [
         ...(rest.type ? [`Tipo: ${rest.type}`] : []),
         ...(rest.dateStart
-          ? [`Data Inicial: ${formatDate(rest.dateStart)}`]
+          ? [`Data Inicial: ${this.formatDate(rest.dateStart)}`]
           : []),
-        ...(rest.dateEnd ? [`Data Final: ${formatDate(rest.dateEnd)}`] : []),
+        ...(rest.dateEnd
+          ? [`Data Final: ${this.formatDate(rest.dateEnd)}`]
+          : []),
         ...(company ? [`Empresa: ${company}`] : []),
       ]
 
