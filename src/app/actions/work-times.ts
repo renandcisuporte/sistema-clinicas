@@ -3,15 +3,12 @@
 import { getUser } from '@/libs/session'
 import { Clinic } from '@/types/clinics'
 import { FormValues } from '@/types/work-times'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 import { prismaClinicRepository } from '~/modules/clinics/repositories/prisma/repository/prisma-clinic-repository'
 import { averageServiceClinicUseCase } from '~/modules/clinics/use-cases/average-service-clinic-use-case'
 import { prismaWorkTimeRepository } from '~/modules/work-times/repositories/prisma/repository/prisma-work-time-repository'
 import { updateWorkTimeRecommendedUseCase } from '~/modules/work-times/use-cases/update-work-time-recommended-use-case'
 import { updateWorkTimeUseCase } from '~/modules/work-times/use-cases/update-work-time-use-case'
-
-// const isMatch = (key: string): boolean => isNaN(Number(key))
-// const formObject: Record<string, any> = {}
 
 export async function saveWorkTime(form: FormValues) {
   const session = await getUser()
@@ -32,7 +29,7 @@ export async function saveWorkTime(form: FormValues) {
   })
 
   revalidatePath('/(dashboard)/jobs-works')
-  revalidateTag('charts')
+
   return {
     message: 'Salvo com sucesso!',
   }
@@ -57,7 +54,7 @@ export async function saveWorkTimeRecommended(form: FormValues) {
   })
 
   revalidatePath('/(dashboard)/jobs-works')
-  revalidateTag('charts')
+
   return {
     message: 'Salvo com sucesso!',
   }
@@ -106,7 +103,7 @@ export async function saveAverageTimeService({ averageService }: Clinic) {
   await useCase.execute(session.clinicId, averageService!)
 
   revalidatePath('/(dashboard)/jobs-works')
-  revalidateTag('charts')
+
   return {
     message: 'Salvo com sucesso!',
   }

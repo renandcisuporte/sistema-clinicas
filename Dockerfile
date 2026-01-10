@@ -23,8 +23,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Instala o PM2 globalmente
-RUN npm install -g pm2
+# # Instala o PM2 globalmente
+# RUN npm install -g pm2
 
 COPY --from=builder /app/package*.json ./
 RUN npm ci --only=dev
@@ -40,6 +40,7 @@ RUN npx prisma generate
 
 EXPOSE 3004
 
-# PM2 em modo runtime (essencial para Docker)
-CMD ["pm2-runtime", "ecosystem.config.js"]
+# # PM2 em modo runtime (essencial para Docker)
+# CMD ["pm2-runtime", "ecosystem.config.js"]
+CMD ["npm", "run", "start", "--", "-p", "3004"]
 
