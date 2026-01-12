@@ -1,10 +1,10 @@
 import { UserRepository } from '~/modules/users/repositories/user-repository'
-import { hashPass } from '~/shared/utils'
+import { Password } from '~/shared/providers/password/password'
 import { UserInput, UserOutput } from '../repositories/prisma/entity/user'
 
-type Dependences = { repository: UserRepository }
+type Dependences = { repository: UserRepository; provider: Password }
 
-export const createUserUseCase = ({ repository }: Dependences) => {
+export const createUserUseCase = ({ repository, provider }: Dependences) => {
   return {
     async execute(
       input: UserInput & { confirmPassword: string },
@@ -13,7 +13,7 @@ export const createUserUseCase = ({ repository }: Dependences) => {
       const userIsExists = await repository.findByEmail(input.email)
       if (userIsExists) throw new Error(`Usuário ${input.email} já cadastrado!`)
 
-      const passwordHash = hashPass(password)
+      const passwordHash = provider.hashPass(password)
 
       const user = await repository.create({
         ...rest,
