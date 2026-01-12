@@ -53,18 +53,18 @@ export function calculateTotalHours(
   return totalMinutes / 60
 }
 
-export function formatErrors(errors: any[]) {
-  const formattedErrors: any = {}
+// export function formatErrors(errors: any[]) {
+//   const formattedErrors: any = {}
 
-  errors.forEach((error) => {
-    // Pegue o último valor do caminho (neste caso, 'ie')
-    const field = error.path[error.path.length - 1]
-    // Adicione a chave com a mensagem no objeto resultante
-    formattedErrors[field] = error.message
-  })
+//   errors.forEach((error) => {
+//     // Pegue o último valor do caminho (neste caso, 'ie')
+//     const field = error.path[error.path.length - 1]
+//     // Adicione a chave com a mensagem no objeto resultante
+//     formattedErrors[field] = error.message
+//   })
 
-  return formattedErrors
-}
+//   return formattedErrors
+// }
 
 export function codeClinicId() {
   let code = ''
