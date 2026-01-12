@@ -1,7 +1,5 @@
-import { compareSync, genSaltSync, hashSync } from 'bcryptjs'
 import { format as dateFormat } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { sign, verify } from 'jsonwebtoken'
 
 export function priceFormatted(price: string | number): number {
   price = Number(price.toString().replace(/\D/g, ''))
@@ -55,35 +53,18 @@ export function calculateTotalHours(
   return totalMinutes / 60
 }
 
-export function hashPass(password: string): string {
-  const salt = genSaltSync(10)
-  return hashSync(password, salt)
-}
+// export function formatErrors(errors: any[]) {
+//   const formattedErrors: any = {}
 
-export function verifyPass(password: string, hashPass: string): boolean {
-  return compareSync(password, hashPass)
-}
+//   errors.forEach((error) => {
+//     // Pegue o último valor do caminho (neste caso, 'ie')
+//     const field = error.path[error.path.length - 1]
+//     // Adicione a chave com a mensagem no objeto resultante
+//     formattedErrors[field] = error.message
+//   })
 
-export function hashJwt(input: any, expiresIn = 7200) {
-  return sign(input, process.env.NEXT_PUBLIC_SECRET!, { expiresIn })
-}
-
-export function verifyJwt(input: any): any {
-  return verify(input, process.env.NEXT_PUBLIC_SECRET!)
-}
-
-export function formatErrors(errors: any[]) {
-  const formattedErrors: any = {}
-
-  errors.forEach((error) => {
-    // Pegue o último valor do caminho (neste caso, 'ie')
-    const field = error.path[error.path.length - 1]
-    // Adicione a chave com a mensagem no objeto resultante
-    formattedErrors[field] = error.message
-  })
-
-  return formattedErrors
-}
+//   return formattedErrors
+// }
 
 export function codeClinicId() {
   let code = ''
