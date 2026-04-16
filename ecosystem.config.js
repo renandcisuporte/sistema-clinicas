@@ -6,7 +6,7 @@ module.exports = {
       version: '1.0.1',
       name: 'daniela-fidellis-app',
       script: './node_modules/next/dist/bin/next',
-      args: 'start -p 3004',
+      args: 'start -p 3000',
       instances: 1, // ou 'max' se quiser cluster mode
       exec_mode: 'fork', // ou 'cluster' se usar mais CPUs
       watch: false, // watch deve ser false em produção
@@ -15,7 +15,7 @@ module.exports = {
       autorestart: true,
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3004,
+        PORT: 3000,
       },
     },
   ],
