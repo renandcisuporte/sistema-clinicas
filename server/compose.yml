@@ -1,0 +1,16 @@
+services:
+  app:
+    image: legacy-node16-base:latest
+    container_name: dclinica-node16-app
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - '127.0.0.1:3000:3000'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./../:/app
+    tty: true
+    stdin_open: true
+    command: sh
+    user: '0:0'

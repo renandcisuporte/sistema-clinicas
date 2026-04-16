@@ -44,7 +44,7 @@ jobs:
           host: ${{ secrets.DANIELA_FIDELLIS_HOST }}
           username: ${{ secrets.DANIELA_FIDELLIS_USER }}
           password: ${{ secrets.DANIELA_FIDELLIS_PASS }}
-          port: 22022
+          port: 22
           script: |
             cd /home/dclinica/public_html
             chmod +x ./deploy.sh
