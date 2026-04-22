@@ -1,5 +1,3 @@
-const { version } = require('node:os')
-
 module.exports = {
   apps: [
     {
