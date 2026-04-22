@@ -1,22 +1,22 @@
-require('dotenv/config')
+const { version } = require('node:os')
 
 module.exports = {
   apps: [
     {
-      version: '1.0.1',
-      name: 'daniela-fidellis-app',
-      script: './node_modules/next/dist/bin/next',
-      args: 'start -p 3004',
-      instances: 1, // ou 'max' se quiser cluster mode
-      exec_mode: 'fork', // ou 'cluster' se usar mais CPUs
-      watch: false, // watch deve ser false em produção
-      max_memory_restart: '512M', // 96M é muito baixo pra Next.js
-      restart_delay: 5000,
-      autorestart: true,
-      env_production: {
+      version: '2.0.1',
+      name: 'dclinica-app',
+      script: './server.js',
+      instances: 1,
+      exec_mode: 'cluster',
+      env: {
+        HOSTNAME: '0.0.0.0',
         NODE_ENV: 'production',
         PORT: 3004,
       },
+      error_file: './.logs/pm2-error.log',
+      out_file: './.logs/pm2-out.log',
+      log_file: './.logs/pm2-combined.log',
+      time: true,
     },
   ],
 }
