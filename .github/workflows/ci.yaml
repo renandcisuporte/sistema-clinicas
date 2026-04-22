@@ -22,8 +22,6 @@ jobs:
           password: ${{ secrets.DANIELA_FIDELLIS_PASSWORD }}
           server-dir: ./public_html/
           exclude: |
-            **/Dockerfile*
-            **/docker-*
             **/.vscode*
             **/.vscode*/**
             **/.next*
