@@ -1,9 +1,0 @@
-#!/bin/bash
-
-echo "BUILD IMAGE"
-docker build -t legacy-node16-base:latest .
-
-echo "COMPOSE UP"
-docker compose up -d --build --force-recreate
-
-echo "DONE"

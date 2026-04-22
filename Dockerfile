@@ -1,9 +1,12 @@
 FROM node:16.20.2-alpine AS builder
 WORKDIR /app
 RUN apk update && apk add --no-cache libc6-compat git bash
+
 COPY package*.json ./
 RUN npm install
+
 COPY . .
+
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npm run build
