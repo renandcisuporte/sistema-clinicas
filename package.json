@@ -1,13 +1,13 @@
 {
   "name": "clinica",
-  "version": "0.1.1",
+  "version": "1.0.1",
   "private": true,
   "engineStrict": true,
   "overrides": {
     "postcss-load-config": "^4"
   },
   "engines": {
-    "node": "^16.20.2"
+    "node": "<=16.x"
   },
   "scripts": {
     "dev": "next dev",
